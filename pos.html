@@ -488,6 +488,41 @@
     .modal-body { padding: 18px 22px; }
     .modal-footer { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; gap: 10px; justify-content: flex-end; }
 
+    .selection-popup-modal {
+      max-height: min(88vh, 720px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .selection-popup-modal .modal-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    .table-popup-modal { width: 420px; }
+    .meta-popup-modal  { width: 360px; }
+    .item-popup-modal {
+      width: min(440px, calc(100vw - 20px)) !important;
+      max-height: min(88vh, 720px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .item-popup-modal .modal-body {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    .item-popup-modal .modal-footer {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .item-popup-modal .modal-footer .btn-outline,
+    .item-popup-modal .modal-footer .btn-checkout {
+      width: auto;
+      flex: 0 0 auto;
+    }
+
     /* Customer Modal Grid */
     .cust-search { width: 100%; height: 38px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; outline: none; margin-bottom: 14px; }
     .cust-search:focus { border-color: var(--primary); }
@@ -779,6 +814,26 @@
       .cat-popup-modal .modal-body {
         padding-left: 16px;
         padding-right: 16px;
+      }
+      .table-popup-modal,
+      .meta-popup-modal {
+        width: calc(100vw - 20px) !important;
+      }
+      .table-popup-modal .modal-body,
+      .meta-popup-modal .modal-body {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .item-popup-modal .modal-body,
+      .item-popup-modal .modal-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .item-popup-modal .modal-footer .btn-outline,
+      .item-popup-modal .modal-footer .btn-checkout {
+        flex: 1 1 calc(50% - 5px);
+        min-width: 0;
+        justify-content: center;
       }
       .cart-header,
       .customer-strip,
@@ -1381,7 +1436,7 @@
 
 <!-- Table Modal -->
 <div class="modal-overlay" id="tableModal">
-  <div class="modal" style="width:420px;">
+  <div class="modal selection-popup-modal table-popup-modal">
     <div class="modal-header">
       <div class="modal-title"><i class="fa-solid fa-table-cells" style="color:var(--primary);"></i>&nbsp; Select Table</div>
       <button class="modal-close" onclick="closeModal('tableModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -1421,7 +1476,7 @@
 
 <!-- Meta Popup Modal -->
 <div class="modal-overlay" id="metaPopupModal">
-  <div class="modal" style="width:360px;">
+  <div class="modal selection-popup-modal meta-popup-modal">
     <div class="modal-header">
       <div class="modal-title" id="metaPopupTitle"><i class="fa-solid fa-list" style="color:var(--primary);"></i>&nbsp; Select Option</div>
       <button class="modal-close" onclick="closeModal('metaPopupModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -1466,7 +1521,7 @@
 
 <!-- Item Detail Modal -->
 <div class="modal-overlay" id="itemModal">
-  <div class="modal" style="width:440px;">
+  <div class="modal item-popup-modal">
     <div class="modal-header">
       <div class="modal-title" id="itemModalTitle">Paneer Butter Masala </div>
       <button class="modal-close" onclick="closeModal('itemModal')"><i class="fa-solid fa-xmark"></i></button>
