@@ -589,24 +589,37 @@
     }
     .cat-popup-btn.filtered .cat-active-dot { display: block; }
 
-    .cat-popup-dropdown {
-      position: absolute; top: calc(100% + 8px); right: 0;
-      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-md);
-      box-shadow: var(--shadow-lg); padding: 10px; z-index: 500;
-      display: none; width: 320px;
+    .cat-popup-modal {
+      width: min(560px, calc(100vw - 24px));
+      max-height: min(88vh, 720px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    .cat-popup-dropdown.open { display: block; animation: fadeDown .18s ease; }
-    @keyframes fadeDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
-
-    .cat-popup-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 4px 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
+    .cat-popup-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .cat-popup-header span { font-size: 12px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
-    .cat-popup-header a  { font-size: 11px; color: var(--primary); font-weight: 600; cursor: pointer; }
+    .cat-popup-clear {
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      transition: color .15s;
+    }
+    .cat-popup-clear:hover { color: var(--primary-dark); }
+    .cat-popup-modal .modal-body {
+      flex: 1;
+      min-height: 0;
+      padding-top: 16px;
+      overflow-y: auto;
+    }
 
     .cat-popup-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 6px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
     }
     .cat-popup-item {
       padding: 10px 8px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
@@ -714,7 +727,27 @@
       .topbar-desktop-only  { display: none !important; }
       .topbar-mobile-cart   { display: flex !important; }
       .topbar-mobile-menu   { display: flex !important; }
+      body {
+        display: block;
+        height: auto;
+        min-height: 100dvh;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+      .main {
+        display: block;
+        min-height: 100dvh;
+        overflow: visible;
+      }
+      .pos-wrapper,
+      .pos-left {
+        display: block;
+        overflow: visible;
+      }
       .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 250;
         padding: 0 12px;
         gap: 10px;
       }
@@ -723,12 +756,12 @@
         width: 34px;
         height: 34px;
       }
-      .cat-popup-dropdown {
-        position: fixed;
-        top: auto; left: 12px; right: 12px;
-        width: auto;
-        max-height: 60vh;
-        overflow-y: auto;
+      .cat-popup-modal {
+        width: calc(100vw - 20px);
+      }
+      .cat-popup-modal .modal-body {
+        padding-left: 16px;
+        padding-right: 16px;
       }
 
       /* Hide sidebar entirely — gives full width to item grid */
@@ -811,6 +844,8 @@
 
       /* Item grid — 2 columns across full screen width */
       .menu-grid {
+        flex: none;
+        overflow: visible;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         padding: 8px 12px 92px;
         gap: 10px;
@@ -1100,13 +1135,20 @@
             <span class="cat-active-dot"></span>
             <i class="fa-solid fa-chevron-down" style="font-size:10px;margin-left:2px;"></i>
           </button>
-          <div class="cat-popup-dropdown" id="catPopupDropdown">
-            <div class="cat-popup-header">
-              <span>Filter by Category</span>
-              <a onclick="resetCat()">Clear</a>
-            </div>
-            <div class="cat-popup-grid" id="catPopupGrid">
-              <!-- filled by JS -->
+          <div class="modal-overlay" id="catPopupModal">
+            <div class="modal cat-popup-modal">
+              <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-layer-group" style="color:var(--primary);"></i>&nbsp; Select Category</div>
+                <div class="cat-popup-actions">
+                  <span class="cat-popup-clear" onclick="resetCat()">Clear</span>
+                  <button class="modal-close" onclick="closeModal('catPopupModal')"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+              </div>
+              <div class="modal-body">
+                <div class="cat-popup-grid" id="catPopupGrid">
+                  <!-- filled by JS -->
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1685,11 +1727,13 @@
   }
 
   function toggleCatPopup() {
-    const dd  = document.getElementById('catPopupDropdown');
-    const btn = document.getElementById('catPopupBtn');
-    const open = dd.classList.toggle('open');
-    btn.classList.toggle('open', open);
-    if (open) renderCatPopup();
+    const modal = document.getElementById('catPopupModal');
+    if (modal.classList.contains('show')) {
+      closeModal('catPopupModal');
+      return;
+    }
+    renderCatPopup();
+    openModal('catPopupModal');
   }
 
   function selectCat(key, label) {
@@ -1697,21 +1741,11 @@
     const btn   = document.getElementById('catPopupBtn');
     document.getElementById('catPopupLabel').textContent = key === 'all' ? 'All Categories' : label;
     btn.classList.toggle('filtered', key !== 'all');
-    document.getElementById('catPopupDropdown').classList.remove('open');
-    btn.classList.remove('open');
+    closeModal('catPopupModal');
     renderMenu();
   }
 
   function resetCat() { selectCat('all','All Items'); }
-
-  // Close popup on outside click
-  document.addEventListener('click', e => {
-    const wrap = document.querySelector('.cat-popup-wrap');
-    if (wrap && !wrap.contains(e.target)) {
-      document.getElementById('catPopupDropdown').classList.remove('open');
-      document.getElementById('catPopupBtn').classList.remove('open');
-    }
-  });
 
   /* ─── FILTER ─────────────────────────────── */
   function filterItems(val) {
@@ -1798,10 +1832,20 @@
   }
 
   /* ─── MODAL HELPERS ──────────────────────── */
-  function openModal(id)  { document.getElementById(id).classList.add('show'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  function openModal(id)  {
+    document.getElementById(id).classList.add('show');
+    if (id === 'catPopupModal') {
+      document.getElementById('catPopupBtn').classList.add('open');
+    }
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+    if (id === 'catPopupModal') {
+      document.getElementById('catPopupBtn').classList.remove('open');
+    }
+  }
   document.querySelectorAll('.modal-overlay').forEach(o => {
-    o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
+    o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
   });
 
   /* ─── TOAST ──────────────────────────────── */
