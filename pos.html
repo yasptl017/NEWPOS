@@ -142,7 +142,7 @@
     .sidebar.collapsed .user-info { opacity: 0; width: 0; overflow: hidden; }
 
     /* ─── MAIN LAYOUT ─────────────────────────── */
-    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
 
     .topbar {
       background: var(--card); border-bottom: 1px solid var(--border);
@@ -164,13 +164,13 @@
 
     /* ─── POS WRAPPER ─────────────────────────── */
     .pos-wrapper {
-      flex: 1; display: flex; overflow: hidden;
+      flex: 1; display: flex; overflow: hidden; min-width: 0;
     }
 
     /* ─── LEFT PANEL ──────────────────────────── */
     .pos-left {
       flex: 1; display: flex; flex-direction: column;
-      overflow: hidden; background: var(--bg);
+      overflow: hidden; background: var(--bg); min-width: 0;
     }
 
     /* Order Meta Bar */
@@ -624,6 +624,280 @@
     @media (max-width: 1100px) {
       .pos-right { width: 300px; min-width: 300px; }
     }
+
+    /* ─── MOBILE CART PANEL ───────────────────── */
+    @media (max-width: 768px) {
+      .pos-right {
+        position: fixed;
+        top: 0; right: 0; bottom: 0;
+        width: 320px; min-width: 0;
+        z-index: 300;
+        transform: translateX(100%);
+        transition: transform .3s cubic-bezier(.4,0,.2,1);
+        box-shadow: -4px 0 24px rgba(0,0,0,.15);
+      }
+      .pos-right.cart-open {
+        transform: translateX(0);
+      }
+
+      /* Floating cart button */
+      .mobile-cart-fab {
+        display: flex;
+        align-items: center; justify-content: center;
+        position: fixed;
+        bottom: 24px; right: 20px;
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        font-size: 20px;
+        box-shadow: 0 4px 16px rgba(79,70,229,.45);
+        cursor: pointer;
+        z-index: 299;
+        transition: transform .2s, background .15s;
+      }
+      .mobile-cart-fab:hover { background: var(--primary-dark); transform: scale(1.07); }
+      .mobile-cart-fab .fab-badge {
+        position: absolute;
+        top: 6px; right: 6px;
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        background: var(--danger);
+        color: #fff;
+        font-size: 10px; font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        border: 2px solid #fff;
+      }
+
+      /* Backdrop */
+      .cart-backdrop {
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,.35);
+        z-index: 299;
+      }
+      .cart-backdrop.active { display: block; }
+    }
+
+    /* Topbar cart badge */
+    .topbar-cart-badge {
+      position: absolute; top: 4px; right: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--danger); color: #fff;
+      font-size: 9px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--card);
+    }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.35);
+      z-index: 309;
+    }
+    .sidebar-backdrop.active { display: block; }
+
+    /* Hide fab & close btn on larger screens */
+    @media (min-width: 769px) {
+      .mobile-cart-fab      { display: none; }
+      .cart-backdrop        { display: none !important; }
+      .sidebar-backdrop     { display: none !important; }
+      .mobile-close-cart    { display: none !important; }
+      .topbar-mobile-cart   { display: none !important; }
+      .topbar-mobile-menu   { display: none !important; }
+    }
+    @media (max-width: 768px) {
+      /* FAB not needed — topbar cart button is used instead */
+      .mobile-cart-fab { display: none !important; }
+    }
+    @media (max-width: 768px) {
+      .mobile-close-cart    { display: flex !important; }
+      .topbar-desktop-only  { display: none !important; }
+      .topbar-mobile-cart   { display: flex !important; }
+      .topbar-mobile-menu   { display: flex !important; }
+      .topbar {
+        padding: 0 12px;
+        gap: 10px;
+      }
+      .topbar-title-group { display: none; }
+      .topbar-btn {
+        width: 34px;
+        height: 34px;
+      }
+      .cat-popup-dropdown {
+        position: fixed;
+        top: auto; left: 12px; right: 12px;
+        width: auto;
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+
+      /* Hide sidebar entirely — gives full width to item grid */
+      .sidebar {
+        display: flex !important;
+        position: fixed;
+        top: 0; left: 0; bottom: 0;
+        width: 260px !important;
+        min-width: 260px !important;
+        z-index: 310;
+        transform: translateX(-100%);
+        transition: transform .28s cubic-bezier(.4,0,.2,1);
+        box-shadow: 10px 0 30px rgba(15,23,42,.22);
+      }
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+      .sidebar.collapsed {
+        width: 260px !important;
+        min-width: 260px !important;
+      }
+      .sidebar.collapsed .brand-text,
+      .sidebar.collapsed .user-info,
+      .sidebar.collapsed .nav-item .nav-label,
+      .sidebar.collapsed .nav-badge,
+      .sidebar.collapsed .sidebar-section-label {
+        opacity: 1;
+        width: auto;
+      }
+      .sidebar.collapsed .brand-icon {
+        display: flex;
+      }
+      .sidebar.collapsed .sidebar-brand {
+        justify-content: flex-start;
+      }
+      .sidebar.collapsed .sidebar-toggle {
+        margin-left: auto;
+      }
+      .sidebar.collapsed .nav-item:hover::after {
+        display: none;
+      }
+      .order-meta {
+        padding: 10px 12px;
+        gap: 8px;
+        align-items: stretch;
+      }
+      .order-meta .meta-group {
+        width: 100%;
+        min-width: 0;
+      }
+      .delivery-tabs {
+        width: 100%;
+        overflow-x: auto;
+      }
+      .delivery-tab {
+        flex: 1;
+        justify-content: center;
+        white-space: nowrap;
+      }
+      .meta-group .meta-select {
+        width: 100%;
+        min-width: 0;
+      }
+      .menu-controls {
+        padding: 10px 12px 8px;
+        gap: 8px;
+      }
+      .search-box {
+        min-width: 0;
+        width: 100%;
+        flex: 1 1 100%;
+      }
+      .cat-popup-wrap {
+        width: 100%;
+      }
+      .cat-popup-btn {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      /* Item grid — 2 columns across full screen width */
+      .menu-grid {
+        grid-template-columns: 1fr;
+        padding: 8px 12px 92px;
+        gap: 10px;
+      }
+
+      /* Card layout */
+      .item-card {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr);
+        min-width: 0;
+        min-height: 104px;
+        border-radius: 14px;
+      }
+      .item-img {
+        height: 100%;
+        min-height: 104px;
+        aspect-ratio: auto;
+        font-size: 38px;
+      }
+
+      .item-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 10px 12px;
+        min-width: 0;
+      }
+
+      .item-name {
+        font-size: 13px;
+        margin-bottom: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .item-footer {
+        gap: 10px;
+        margin-top: 0;
+      }
+
+      .item-price { font-size: 14px; }
+      .item-price small { font-size: 10px; }
+      .item-badge {
+        top: 8px;
+        right: 8px;
+        font-size: 8px;
+      }
+
+      .item-add-btn,
+      .item-in-cart-badge {
+        width: 32px; height: 32px;
+        font-size: 16px; border-radius: 9px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .topbar {
+        padding: 0 10px;
+      }
+      .order-meta,
+      .menu-controls {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      .menu-grid {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      .item-card {
+        grid-template-columns: 82px minmax(0, 1fr);
+        min-height: 96px;
+      }
+      .item-img {
+        min-height: 96px;
+        font-size: 34px;
+      }
+      .item-body {
+        padding: 9px 10px;
+      }
+      .item-price {
+        font-size: 13px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -702,22 +976,30 @@
 
   <!-- Topbar -->
   <div class="topbar">
-    <div>
+    <div class="topbar-title-group">
       <div class="topbar-title">POS Terminal</div>
       <div class="topbar-sub">Friday, 13 Mar 2026 &nbsp;·&nbsp; Shift: Morning (8:00–16:00)</div>
     </div>
+    <div class="topbar-btn topbar-mobile-menu" title="Menu" onclick="toggleSidebar()">
+      <i class="fa-solid fa-bars"></i>
+    </div>
     <div class="topbar-spacer"></div>
-    <div class="topbar-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></div>
-    <div class="topbar-btn" title="Notifications">
+    <div class="topbar-btn topbar-desktop-only" title="Search"><i class="fa-solid fa-magnifying-glass"></i></div>
+    <div class="topbar-btn topbar-desktop-only" title="Notifications">
       <i class="fa-solid fa-bell"></i>
       <span class="notif-dot"></span>
     </div>
-    <div class="topbar-btn" title="Full Screen" onclick="toggleFull()"><i class="fa-solid fa-expand"></i></div>
-    <div style="width:1px;height:26px;background:var(--border);"></div>
-    <div style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+    <div class="topbar-btn topbar-desktop-only" title="Full Screen" onclick="toggleFull()"><i class="fa-solid fa-expand"></i></div>
+    <div class="topbar-desktop-only" style="width:1px;height:26px;background:var(--border);"></div>
+    <div class="topbar-desktop-only" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
       <div class="user-avatar" style="width:32px;height:32px;font-size:12px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;">AK</div>
       <span style="font-size:13px;font-weight:600;color:var(--text-primary);">Admin Kumar</span>
       <i class="fa-solid fa-chevron-down" style="font-size:11px;color:var(--text-muted);"></i>
+    </div>
+    <!-- Mobile-only cart button in topbar -->
+    <div class="topbar-btn topbar-mobile-cart" title="Cart" onclick="toggleMobileCart()" style="position:relative;">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span class="topbar-cart-badge" id="topbarCartBadge">3</span>
     </div>
   </div>
 
@@ -832,6 +1114,7 @@
         <div style="display:flex;gap:6px;">
           <div class="topbar-btn" title="Hold Order" onclick="showToast('Order placed on hold','warning')"><i class="fa-solid fa-pause"></i></div>
           <div class="topbar-btn" title="Print KOT" onclick="openModal('kotModal')"><i class="fa-solid fa-print"></i></div>
+          <div class="topbar-btn mobile-close-cart" title="Close Cart" onclick="toggleMobileCart()" style="display:none;"><i class="fa-solid fa-xmark"></i></div>
         </div>
       </div>
 
@@ -1263,6 +1546,10 @@
     // Update count badge
     const total = cartItems.reduce((s,i) => s + i.qty, 0);
     document.getElementById('cartCount').textContent = total;
+    const fab = document.getElementById('fabCartCount');
+    if (fab) { fab.textContent = total; fab.style.display = total > 0 ? '' : 'none'; }
+    const topbarBadge = document.getElementById('topbarCartBadge');
+    if (topbarBadge) { topbarBadge.textContent = total; topbarBadge.style.display = total > 0 ? '' : 'none'; }
 
     // Update subtotal
     const subtotal = cartItems.reduce((s,i) => s + i.price * i.qty, 0);
@@ -1487,14 +1774,72 @@
   }
 
   /* ─── SIDEBAR TOGGLE ─────────────────────── */
+  function setMobileSidebar(isOpen) {
+    const sidebar  = document.getElementById('sidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+    sidebar.classList.remove('collapsed');
+    sidebar.classList.toggle('mobile-open', isOpen);
+    backdrop.classList.toggle('active', isOpen);
+  }
+
+  function closeMobileSidebar() {
+    setMobileSidebar(false);
+  }
+
   function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
+    const sidebar = document.getElementById('sidebar');
+
+    if (window.innerWidth <= 768) {
+      const willOpen = !sidebar.classList.contains('mobile-open');
+      if (willOpen) setMobileCart(false);
+      setMobileSidebar(willOpen);
+      return;
+    }
+
+    sidebar.classList.toggle('collapsed');
+  }
+
+  /* ─── MOBILE CART TOGGLE ─────────────────── */
+  function setMobileCart(isOpen) {
+    const cart     = document.querySelector('.pos-right');
+    const backdrop = document.getElementById('cartBackdrop');
+    cart.classList.toggle('cart-open', isOpen);
+    backdrop.classList.toggle('active', isOpen);
+  }
+
+  function toggleMobileCart() {
+    const cart   = document.querySelector('.pos-right');
+    const isOpen = cart.classList.contains('cart-open');
+    if (!isOpen) closeMobileSidebar();
+    setMobileCart(!isOpen);
   }
 
   /* ─── INIT ───────────────────────────────── */
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      closeMobileSidebar();
+      setMobileCart(false);
+    }
+  });
+
+  document.querySelectorAll('#sidebar .nav-item').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeMobileSidebar();
+    });
+  });
+
   updateMetaSelections();
   renderMenu();
   renderCart();
 </script>
+
+<!-- Mobile cart FAB + backdrop -->
+<div class="mobile-cart-fab" onclick="toggleMobileCart()" title="Open Cart">
+  <i class="fa-solid fa-cart-shopping"></i>
+  <span class="fab-badge" id="fabCartCount">3</span>
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+<div class="cart-backdrop" id="cartBackdrop" onclick="toggleMobileCart()"></div>
+
 </body>
 </html>
