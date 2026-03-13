@@ -306,11 +306,15 @@
     .pos-right {
       width: 320px; min-width: 300px;
       background: var(--card); border-left: 1px solid var(--border);
-      display: flex; flex-direction: column; overflow: hidden;
+      display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
     }
+    .pos-right::-webkit-scrollbar { width: 4px; }
+    .pos-right::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     .cart-header {
-      padding: 14px 16px 12px;
+      padding: 12px 14px 10px;
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
     }
@@ -320,9 +324,9 @@
 
     /* Customer Strip */
     .customer-strip {
-      padding: 10px 16px;
+      padding: 8px 14px;
       background: var(--bg); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: center; gap: 8px;
     }
     .cust-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
     .cust-info h5 { font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
@@ -330,38 +334,51 @@
     .cust-change { margin-left: auto; font-size: 11px; color: var(--primary); font-weight: 600; cursor: pointer; }
 
     /* Cart Items */
-    .cart-items { flex: 1; overflow-y: auto; padding: 8px 0; }
-    .cart-items::-webkit-scrollbar { width: 4px; }
-    .cart-items::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .cart-items { flex: none; overflow: visible; padding: 4px 0; }
 
     .cart-item {
-      padding: 10px 16px; border-bottom: 1px solid #F1F5F9;
-      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 14px; border-bottom: 1px solid #F1F5F9;
+      display: flex; align-items: flex-start;
     }
-    .ci-img { width: 40px; height: 40px; border-radius: 8px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
     .ci-info { flex: 1; min-width: 0; }
+    .ci-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .ci-main { flex: 1; min-width: 0; }
     .ci-name { font-size: 12.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
-    .ci-variant { font-size: 10.5px; color: var(--text-muted); margin-bottom: 4px; }
+    .ci-variant {
+      font-size: 10.5px; color: var(--text-muted); margin-bottom: 6px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .ci-note { font-size: 10.5px; color: var(--text-muted); font-style: italic; }
-    .ci-controls { display: flex; align-items: center; gap: 0; margin-top: 4px; }
+    .ci-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .ci-controls { display: flex; align-items: center; gap: 0; }
     .ci-btn {
-      width: 24px; height: 24px; border: 1px solid var(--border); background: var(--bg);
+      width: 22px; height: 22px; border: 1px solid var(--border); background: var(--bg);
       border-radius: 6px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 13px; color: var(--text-secondary); transition: all .12s;
+      cursor: pointer; font-size: 12px; color: var(--text-secondary); transition: all .12s;
     }
     .ci-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
-    .ci-qty { width: 30px; text-align: center; font-size: 13px; font-weight: 700; color: var(--text-primary); }
-    .ci-price { font-size: 13px; font-weight: 700; color: var(--text-primary); flex-shrink: 0; text-align: right; }
-    .ci-del { width: 24px; height: 24px; border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 12px; transition: color .12s; }
+    .ci-qty { width: 28px; text-align: center; font-size: 12px; font-weight: 700; color: var(--text-primary); }
+    .ci-price { font-size: 13px; font-weight: 700; color: var(--text-primary); flex-shrink: 0; text-align: right; white-space: nowrap; }
+    .ci-del { width: 22px; height: 22px; border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 12px; transition: color .12s; }
     .ci-del:hover { color: var(--danger); }
 
     /* Cart Note */
     .cart-note-area {
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-top: 1px solid var(--border);
     }
     .cart-note-input {
-      width: 100%; height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      width: 100%; height: 36px; border: 1px solid var(--border); border-radius: var(--radius-sm);
       padding: 0 10px; font-size: 12px; font-family: inherit; outline: none; color: var(--text-primary);
       transition: border-color .15s; resize: none;
     }
@@ -370,7 +387,7 @@
 
     /* Totals */
     .cart-totals {
-      padding: 10px 16px 4px;
+      padding: 8px 14px 4px;
       border-top: 1px solid var(--border);
     }
     .tot-row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 5px; }
@@ -383,16 +400,16 @@
 
     /* Coupon */
     .coupon-row {
-      padding: 8px 16px;
+      padding: 6px 14px;
       display: flex; gap: 8px;
     }
     .coupon-input {
-      flex: 1; height: 32px; padding: 0 10px; border: 1px dashed var(--primary);
+      flex: 1; height: 30px; padding: 0 10px; border: 1px dashed var(--primary);
       border-radius: var(--radius-sm); font-size: 12px; font-family: inherit;
       outline: none; color: var(--text-primary); background: var(--primary-light);
     }
     .coupon-btn {
-      height: 32px; padding: 0 12px; border: none; border-radius: var(--radius-sm);
+      height: 30px; padding: 0 12px; border: none; border-radius: var(--radius-sm);
       background: var(--primary); color: #fff; font-size: 12px; font-weight: 600;
       cursor: pointer; transition: background .15s;
     }
@@ -400,7 +417,7 @@
 
     /* Payment */
     .payment-section {
-      padding: 10px 16px;
+      padding: 8px 14px;
       border-top: 1px solid var(--border);
     }
     .payment-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 8px; }
@@ -428,7 +445,7 @@
 
     /* Action Buttons */
     .cart-actions {
-      padding: 12px 16px 14px;
+      padding: 10px 14px 12px;
       display: flex; gap: 8px; flex-direction: column;
     }
     .btn-checkout {
@@ -763,6 +780,21 @@
         padding-left: 16px;
         padding-right: 16px;
       }
+      .cart-header,
+      .customer-strip,
+      .cart-note-area,
+      .coupon-row,
+      .cart-totals,
+      .payment-section,
+      .cart-actions {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .cart-item {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .cust-info p { font-size: 10px; }
 
       /* Hide sidebar entirely — gives full width to item grid */
       .sidebar {
@@ -1502,17 +1534,17 @@
   /* ─── DATA ─────────────────────────────────── */
   const MENU = [
     { id:1,  name:'Paneer Butter Masala', cat:'mains',     price:240, emoji:'🍛', badge:'veg',    desc:'Creamy tomato butter curry',   inCart:true,  qty:2 },
-    { id:2,  name:'Chicken Tikka Masala',  cat:'mains',     price:320, emoji:'🍗', badge:'nonveg', desc:'Smoky grilled chicken curry',   inCart:false, qty:0 },
+    { id:2,  name:'Chicken Tikka Masala',  cat:'mains',     price:320, emoji:'🍗', badge:'nonveg', desc:'Smoky grilled chicken curry',   inCart:true,  qty:1 },
     { id:3,  name:'Garlic Naan',           cat:'breads',    price:60,  emoji:'🫓', badge:'veg',    desc:'Soft buttery garlic flatbread', inCart:true,  qty:1 },
-    { id:4,  name:'Veg Spring Rolls',      cat:'starters',  price:180, emoji:'🥢', badge:'veg',    desc:'Crispy vegetable rolls',        inCart:false, qty:0 },
-    { id:5,  name:'Chicken Biryani',       cat:'rice',      price:380, emoji:'🍚', badge:'nonveg', desc:'Fragrant basmati rice',         inCart:false, qty:0 },
+    { id:4,  name:'Veg Spring Rolls',      cat:'starters',  price:180, emoji:'🥢', badge:'veg',    desc:'Crispy vegetable rolls',        inCart:true,  qty:2 },
+    { id:5,  name:'Chicken Biryani',       cat:'rice',      price:380, emoji:'🍚', badge:'nonveg', desc:'Fragrant basmati rice',         inCart:true,  qty:1 },
     { id:6,  name:'Mango Lassi',           cat:'beverages', price:120, emoji:'🥭', badge:'veg',    desc:'Chilled mango yogurt drink',    inCart:true,  qty:3 },
-    { id:7,  name:'Gulab Jamun',           cat:'desserts',  price:80,  emoji:'🍮', badge:'new',    desc:'Soft milk solid dumplings',     inCart:false, qty:0 },
-    { id:8,  name:'Dal Tadka',             cat:'mains',     price:180, emoji:'🫕', badge:'veg',    desc:'Tempered yellow lentils',       inCart:false, qty:0 },
+    { id:7,  name:'Gulab Jamun',           cat:'desserts',  price:80,  emoji:'🍮', badge:'new',    desc:'Soft milk solid dumplings',     inCart:true,  qty:1 },
+    { id:8,  name:'Dal Tadka',             cat:'mains',     price:180, emoji:'🫕', badge:'veg',    desc:'Tempered yellow lentils',       inCart:true,  qty:1 },
     { id:9,  name:'Fish Fry',              cat:'starters',  price:280, emoji:'🐟', badge:'nonveg', desc:'Spiced crispy coastal fish',    inCart:false, qty:0 },
-    { id:10, name:'Laccha Paratha',        cat:'breads',    price:70,  emoji:'🥙', badge:'veg',    desc:'Layered whole wheat bread',     inCart:false, qty:0 },
+    { id:10, name:'Laccha Paratha',        cat:'breads',    price:70,  emoji:'🥙', badge:'veg',    desc:'Layered whole wheat bread',     inCart:true,  qty:2 },
     { id:11, name:'Veg Biryani',           cat:'rice',      price:280, emoji:'🍙', badge:'best',   desc:'Aromatic vegetable biryani',    inCart:false, qty:0 },
-    { id:12, name:'Cold Coffee',           cat:'beverages', price:140, emoji:'☕', badge:'veg',    desc:'Rich blended cold coffee',      inCart:false, qty:0 },
+    { id:12, name:'Cold Coffee',           cat:'beverages', price:140, emoji:'☕', badge:'veg',    desc:'Rich blended cold coffee',      inCart:true,  qty:1 },
     { id:13, name:'Family Combo',          cat:'combo',     price:699, emoji:'🍱', badge:'best',   desc:'4 mains + 4 breads + 4 drinks', inCart:false, qty:0 },
     { id:14, name:'Chocolate Brownie',     cat:'desserts',  price:160, emoji:'🍫', badge:'new',    desc:'Warm fudgy chocolate brownie',  inCart:false, qty:0 },
     { id:15, name:'Palak Paneer',          cat:'mains',     price:220, emoji:'🥬', badge:'veg',    desc:'Cottage cheese in spinach gravy',inCart:false, qty:0 },
@@ -1583,15 +1615,22 @@
   }
 
   /* ─── RENDER CART ────────────────────────── */
-  function renderCart() {
+  function renderCartLegacy() {
     const cartItems = MENU.filter(i => i.inCart);
     const el = document.getElementById('cartItems');
 
     el.innerHTML = cartItems.map(item => `
       <div class="cart-item">
-        <div class="ci-img">${item.emoji}</div>
         <div class="ci-info">
-          <div class="ci-name">${item.name}</div>
+          <div class="ci-top">
+            <div class="ci-main">
+              <div class="ci-name">${item.name}</div>
+              <div class="ci-variant">Regular · No onions</div>
+            </div>
+            <div class="ci-price">â‚¹ ${item.price * item.qty}</div>
+          </div>
+          <div class="ci-bottom">
+            <div class="ci-controls">
           <div class="ci-variant">Regular · No onions</div>
           <div class="ci-controls">
             <div class="ci-btn" onclick="updateQty(${item.id},-1)">−</div>
@@ -1620,6 +1659,56 @@
   }
 
   /* ─── CART ACTIONS ───────────────────────── */
+  function renderCart() {
+    const cartItems = MENU.filter(i => i.inCart);
+    const el = document.getElementById('cartItems');
+
+    el.innerHTML = cartItems.map(item => `
+      <div class="cart-item">
+        <div class="ci-info">
+          <div class="ci-top">
+            <div class="ci-main">
+              <div class="ci-name">${item.name}</div>
+              <div class="ci-variant">Regular &middot; No onions</div>
+            </div>
+            <div class="ci-price">&#8377; ${item.price * item.qty}</div>
+          </div>
+          <div class="ci-bottom">
+            <div class="ci-controls">
+              <div class="ci-btn" onclick="updateQty(${item.id},-1)">&minus;</div>
+              <div class="ci-qty">${item.qty}</div>
+              <div class="ci-btn" onclick="updateQty(${item.id},1)">+</div>
+            </div>
+            <button class="ci-del" onclick="removeItem(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const total = cartItems.reduce((sum, item) => sum + item.qty, 0);
+    document.getElementById('cartCount').textContent = total;
+
+    const fab = document.getElementById('fabCartCount');
+    if (fab) {
+      fab.textContent = total;
+      fab.style.display = total > 0 ? '' : 'none';
+    }
+
+    const topbarBadge = document.getElementById('topbarCartBadge');
+    if (topbarBadge) {
+      topbarBadge.textContent = total;
+      topbarBadge.style.display = total > 0 ? '' : 'none';
+    }
+
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+    document.getElementById('subtotal').textContent = `${String.fromCharCode(8377)} ${subtotal.toFixed(2)}`;
+
+    const subtotalLabel = document.querySelector('.cart-totals .tot-row .label');
+    if (subtotalLabel) {
+      subtotalLabel.textContent = `Subtotal (${total} items)`;
+    }
+  }
+
   function quickAdd(id) {
     const item = MENU.find(i => i.id === id);
     item.inCart = true; item.qty = 1;
